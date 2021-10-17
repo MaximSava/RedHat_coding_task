@@ -34,3 +34,18 @@ with open("c:/temp/hebrew.txt", 'w', encoding='utf') as writer:
 with open("c:/temp/hebrew.txt", 'r', encoding='utf') as reader:
     print(reader.readlines())
     reader.close()
+
+# 11
+from PIL import Image, ImageDraw
+
+
+def text(output_path):
+    image = Image.new("RGB", (200, 200), "blue")
+    draw = ImageDraw.Draw(image)
+    draw.text((70, 90), "Hello from")
+    draw.text((95, 100), "Me", )
+    image.save(output_path)
+    image.show(output_path)
+
+
+text("c:/temp/text.png")

@@ -1,80 +1,96 @@
-from selenium import webdriver
+"""
+Buyme site home screen,choose bussiness,sender reciver screen test
 
-chrome_driver = webdriver.Chrome(executable_path="C:\\Users\\MaxSa\\PycharmProjects\\DevOps-Course\\Lesson_4"
-                                                 "\\chromedriver_win32\\chromedriver.exe")
-chrome_driver.implicitly_wait(10)
+"""
+
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as ec
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+
+CHROME_WEBDRIVER_PATH = 'C:/Users/MaxSa/PycharmProjects/DevOps-Course/' \
+                        'Lesson_4/chromedriver_win32/chromedriver.exe'
+
+# Path to profile picture
+PATH_TO_PICTURE_FILE = 'C:/Users/MaxSa/Desktop/world_of_games/doll_2.png'
+
+# Email for registration
+REG_EMAIL = 'buymetest3@mailgw.com'
+
+#  Configuration for driver
+chrome_options = Options()
+# chrome_options.add_argument("--disable-extensions")
+# chrome_options.add_argument("--disable-gpu")
+# chrome_options.add_argument("--no-sandbox") # linux only
+# chrome_options.add_argument("--headless")
+# chrome_options.headless = True # also works
+chrome_driver = webdriver.Chrome(executable_path=CHROME_WEBDRIVER_PATH, options=chrome_options)
 
 chrome_driver.get('http://buyme.co.il')
 
-
-def chrome_driver_setup(site, webdriver_path):
-    chrome_driver = webdriver.Chrome('webdriver_path')
-    chrome_driver.implicitly_wait(10)
-    chrome_driver.get('site')
-
-
-def site_manipulation(xpath, element):
-    site_click = 'chrome_driver.find_element_by_xpath(' + '\'' + xpath + '\'' + ')' + '.' + element + '()'
-    print(site_click)
-    return exec(site_click)
-
-
 # home screen xpath variables
-amount, amount_100 = '//*[@id="ember957"]/div/ul[1]/li[3]/a/span[2]', '//*[@id="ember1012_chosen"]'
-area, area_merkaz = '//*[@id="ember1027_chosen"]/a/span', '//*[@id="ember1027_chosen"]/div/ul/li[3]'
-category, category_local_voucher = '//*[@id="ember1037_chosen"]/a/span', '//*[@id="ember1037_chosen"]/div/ul/li[2]'
-search_voucher_button = '//*[@id="ember1072"]'
+home_screen_list = {
+    'amount': '//*[@id="ember1012_chosen"]/a/span.click()',
+    'amount_100': '//*[@id="ember1012_chosen"]/div/ul/li[2].click()',
+    'area': '//*[@id="ember1027_chosen"]/a/span.click()',
+    'area_merkaz': '//*[@id="ember1027_chosen"]/div/ul/li[3].click()',
+    'category': '//*[@id="ember1037_chosen"]/a/span.click()',
+    'category_local_voucher': '//*[@id="ember1037_chosen"]/div/ul/li[2].click()',
+    'search_voucher_button': '//*[@id="ember1072"].click()'
 
-# Registration xpath variables
-reg_button, reg_link = '//*[@id="ember957"]/div/ul[1]/li[3]/a/span[2]', '//*[@id="ember924"]/div/div[1]/div/div/div[3]/div[1]/span'
-reg_name = '//*[@id="ember1482"]'
-reg_mail = '//*[@id="ember1485"]'
-reg_pass = '//*[@id="valPass"]'
-reg_pass_confirm = '//*[@id="ember1491"]'
-reg_complete_button = '//*[@id="ember1493"]/span'
-
-
-# Login x path variables
-
+}
 
 # Choose bussiness screen variables
-bussiness_choose = '//*[@id="ember1747"]/div[2]/span'
-vaucher_amount_for_bussiness = '//*[@id="ember1778"]'
-vaucher_bussiness_click_button = '//*[@id="ember1780"]'
-vaucher_reciver_name = '//*[@id="ember1883"]'
-vaucher_text_area = '//*[@id="ember1890"]/textarea'
-vaucher_add_picture = 'ember1899'
+choose_bussiness_list = {
+    'bussiness_choose_button': '//div[@class="bottom"].click()',
+    'vaucher_amount_for_bussiness': '//input[@placeholder="הכנס סכום"].send_keys("100")',
+    'vaucher_bussiness_click_button': '//button[@gtm="בחירה"].click()',
+    'vaucher_reciver_name': '//input[@data-parsley-required-message='
+                            '"מי הזוכה המאושר? יש להשלים את שם המקבל/ת"].send_keys("נטלי")',
+    'vaucher_text_area': '//textarea[@data-parsley-group="voucher-greeting"].send_keys("פינוק ממני")',
+    'vaucher_continue_button': '//button[@gtm="המשך"].click()',
+    'vaucher_circle_area_click': '//div[@class="circle-area"].click()',
+    'vaucher_sms_telephone': '//*[@id="sms"].send_keys("0526180349")',
+    'vaucher_sms_sender': '//input[@placeholder="מספר נייד"].send_keys("0526180349")',
+    'vaucher_sender_name': '//input[@placeholder="שם שולח המתנה"].send_keys("מקסים")',
+    'vaucher_continiue_button': '//button[starts-with(@gtm,"המשך")].click()'
+}
+
+def site_cliker(site_xpath_list: dict):
+    # send data to bussiness choose list
+    for i in site_xpath_list:
+        slice_start_xpath = site_xpath_list[i][:].split('.')
+        slice_start_xpath = slice_start_xpath[0]
+        print(slice_start_xpath)
+        men_menu = WebDriverWait(chrome_driver, 10).until(
+            ec.visibility_of_element_located((By.XPATH, slice_start_xpath)))
+        if 'click' in site_xpath_list[i]:
+            print(slice_start_xpath)
+            men_menu.click()
+
+        elif 'send_keys' in site_xpath_list[i]:
+
+            if 'C:/' in site_xpath_list[i]:
+                men_menu = WebDriverWait(chrome_driver, 10).until(
+                    ec.visibility_of_element_located((By.XPATH, '//input[@name="logo"]')))
+                men_menu.send_keys(PATH_TO_PICTURE_FILE)
+
+            elif 'מייל' in site_xpath_list[i]:
+
+                men_menu.send_keys(REG_EMAIL)
+
+            else:
+                send_key_value = site_xpath_list[i].split(".")
+                send_key_value = send_key_value[1].strip('send_keys()\"\"')
+                print(slice_start_xpath)
+                print(send_key_value)
+                men_menu.send_keys(send_key_value)
 
 
-# הרשמה
+if __name__ == "__main__":
+    site_cliker(home_screen_list)
+    site_cliker(choose_bussiness_list)
+    print('Test Passed')
+    chrome_driver.close()
 
-chrome_driver.find_element_by_xpath('//*[@id="ember957"]/div/ul[1]/li[3]/a/span[2]').click()
-chrome_driver.find_element_by_xpath('//*[@id="ember924"]/div/div[1]/div/div/div[3]/div[1]/span').click()
-chrome_driver.find_element_by_xpath('//*[@id="ember1482"]').send_keys('מקסים')
-chrome_driver.find_element_by_xpath('//*[@id="ember1485"]').send_keys('buymetest@mailgw.com')
-chrome_driver.find_element_by_xpath('//*[@id="valPass"]').send_keys('Mypass11')
-chrome_driver.find_element_by_xpath('//*[@id="ember1491"]').send_keys('Mypass11')
-chrome_driver.find_element_by_xpath('//*[@id="ember1493"]/span').click()
-
-# Login
-
-# Home screen site
-chrome_driver.find_element_by_xpath('//*[@id="ember1012_chosen"]').click()
-chrome_driver.find_element_by_xpath('//*[@id="ember1012_chosen"]/div/ul/li[2]').click()
-
-chrome_driver.find_element_by_xpath('//*[@id="ember1027_chosen"]/a/span').click()
-chrome_driver.find_element_by_xpath('//*[@id="ember1027_chosen"]/div/ul/li[3]').click()
-
-chrome_driver.find_element_by_xpath('//*[@id="ember1037_chosen"]/a/span').click()
-chrome_driver.find_element_by_xpath('//*[@id="ember1037_chosen"]/div/ul/li[2]').click()
-
-chrome_driver.find_element_by_xpath('//*[@id="ember1072"]').click()
-
-# Choose bussiness screen
-chrome_driver.find_element_by_xpath('//*[@id="ember1747"]/div[2]/span').click()
-chrome_driver.find_element_by_xpath('//*[@id="ember1778"]').send_keys('100')
-chrome_driver.find_element_by_xpath('//*[@id="ember1780"]').click()
-chrome_driver.find_element_by_xpath('//*[@id="ember1883"]').send_keys('נטלי')
-chrome_driver.find_element_by_xpath('//*[@id="ember1890"]/textarea').send_keys('פינוק ממני')
-chrome_driver.find_element_by_id('ember1899').send_keys('C:\\Users\\MaxSa\\Desktop\\world of games\\doll_2.png')
-# chrome_driver.find_element_by_xpath('//*[@id="ember1936"]').click()

@@ -52,7 +52,7 @@ choose_bussiness_list = {
     'vaucher_continue_button': '//button[@gtm="המשך"].click()',
     'vaucher_circle_area_click': '//div[@class="circle-area"].click()',
     'vaucher_sms_telephone': '//*[@id="sms"].send_keys("0526180129")',
-    'vaucher_sms_sender': '//input[@placeholder="מספר נייד"].send_keys("0526180349")',
+    'vaucher_sms_sender': '//input[@placeholder="מספר נייד"].send_keys("0526180549")',
     'vaucher_sender_name': '//input[@placeholder="שם שולח המתנה"].send_keys("מקסים")',
     'vaucher_continiue_button': '//button[starts-with(@gtm,"המשך")].click()'
 }

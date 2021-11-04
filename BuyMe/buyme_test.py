@@ -2,18 +2,20 @@
 Buyme site home screen,choose bussiness,sender reciver screen test
 
 """
-
+import os
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from decouple import config
 
-CHROME_WEBDRIVER_PATH = 'C:/Users/MaxSa/PycharmProjects/DevOps-Course/' \
-                        'Lesson_4/chromedriver_win32/chromedriver.exe'
+# Webdriver env
+CHROME_WEBDRIVER_PATH = os.environ.get('CHROME_WEBDRIVER_PATH')
 
 # Path to profile picture
-PATH_TO_PICTURE_FILE = 'C:/Users/MaxSa/Desktop/world_of_games/doll_2.png'
+PATH_TO_PICTURE_FILE = os.environ.get('PATH_TO_PICTURE_FILE')
+
 
 # Email for registration
 REG_EMAIL = 'buymetest3@mailgw.com'
@@ -58,7 +60,7 @@ choose_bussiness_list = {
 }
 
 def site_cliker(site_xpath_list: dict):
-    # send data to bussiness choose list
+    # send data to BuyMe Site
     for i in site_xpath_list:
         slice_start_xpath = site_xpath_list[i][:].split('.')
         slice_start_xpath = slice_start_xpath[0]

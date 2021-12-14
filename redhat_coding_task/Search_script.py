@@ -59,18 +59,17 @@ def read_file(file, regex_string, color, underscore, machine_format):
     with open(file_input, 'r') as f:
         line_num = 1
         for line in f:
-            if regex_string in line:
-                print('regex')
-                string = re.search(regex_string, line).string
-                matched_text = re.search(regex_string, line).group()
-                text_position = re.search(regex_string, line).span()
-                start_pos = text_position[0]
-                end_position = text_position[1]
-                sum_characters = end_position - start_pos
+            # Regex iterator
+            finditer = re.finditer(regex_string, line)
+            for it in finditer:
+                string = it.string
+                matched_text = it.group()
+                start_pos = it.start()
+                end_pos = it.end()
+                sum_characters = it.end() - it.start()
                 regex_search(f.name, line_num, string)
-
                 if color is False:
-                    text_highlight(string, start_pos, end_position)
+                    text_highlight(string, start_pos, end_pos)
                 elif underscore is False:
                     print_underscore(start_pos, sum_characters)
                 elif machine_format is False:
@@ -82,7 +81,7 @@ def read_file(file, regex_string, color, underscore, machine_format):
 def regex_search(file_name, line_num, string):
     # Searches for lines matching regular expression
     print(file_name + ':' + str(line_num))
-    print(string, end="")
+    print(string)
 
 
 def print_underscore(start_pos, sum_characters):
@@ -91,6 +90,7 @@ def print_underscore(start_pos, sum_characters):
     """
 
     print(" " * start_pos + "^" * sum_characters)
+    print('--------------------------')
 
 
 def text_highlight(string, start_pos, end_position):
@@ -98,6 +98,7 @@ def text_highlight(string, start_pos, end_position):
     -c ( --color ) which highlight matching text [1]
     """
     print(string[:start_pos] + Back.GREEN + string[start_pos:end_position] + Style.RESET_ALL + string[end_position:])
+    print('--------------------------')
 
 
 def machine_output(file_name, line_num, start_pos, matched_text):
@@ -106,11 +107,12 @@ def machine_output(file_name, line_num, start_pos, matched_text):
                   format: file_name:no_line:start_pos:matched_text
     """
     print(file_name + ':' + str(line_num) + ':' + str(start_pos) + ':' + matched_text)
+    print('--------------------------')
+
     return
 
 
 if __name__ == "__main__":
-    print('start')
     cmd_args = cmd_parser()
     # check if -f option is none empty
     if cmd_args.files is None:
@@ -121,5 +123,4 @@ if __name__ == "__main__":
 
     elif cmd_args.files:
         for i in range(len(cmd_args.files)):
-            print('Field2')
             read_file(cmd_args.files[i], cmd_args.regex[0], cmd_args.color, cmd_args.underscore, cmd_args.machine)

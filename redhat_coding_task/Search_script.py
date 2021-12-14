@@ -30,11 +30,9 @@ def input_file(file=None):
     and checking if file encoding is
     """
     if file is None:
-        print('field4')
         file_input = input('Choose file:')
         return ascii_check(file_input)
     else:
-        print('field6')
         return ascii_check(file)
 
 
@@ -70,9 +68,9 @@ def read_file(file, regex_string, color, underscore, machine_format):
                 end_position = text_position[1]
                 sum_characters = end_position - start_pos
                 regex_search(f.name, line_num, string)
+
                 if color is False:
                     text_highlight(string, start_pos, end_position)
-
                 elif underscore is False:
                     print_underscore(start_pos, sum_characters)
                 elif machine_format is False:

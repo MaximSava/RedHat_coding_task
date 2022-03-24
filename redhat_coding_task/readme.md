@@ -1,7 +1,8 @@
-# Python script, that searches for lines matching regular expression
+# Python script,that searches for lines matching regular expression. 
+
 
 optional arguments:
-  -h, --help            show this help message and exit
+  -h, --help            Show this help message and exit
 
   -r REGEX, --regex REGEX
                         Searches for lines matching regular expression.
